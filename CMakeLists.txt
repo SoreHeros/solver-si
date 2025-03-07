@@ -3,4 +3,8 @@ project(solver_si C)
 
 set(CMAKE_C_STANDARD 23)
 
-add_executable(solver_si main.c)
+add_executable(solver_si main.c
+        solver.c
+        solver.h
+        lists.c
+        lists.h)
