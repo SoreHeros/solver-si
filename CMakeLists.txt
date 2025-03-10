@@ -7,4 +7,6 @@ add_executable(solver_si main.c
         solver.c
         solver.h
         lists.c
-        lists.h)
+        lists.h
+        trie.c
+        trie.h)

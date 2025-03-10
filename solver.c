@@ -8,11 +8,13 @@
 void * (*init)();
 void ** (* step)(void *);
 int (* isEnd)(void *);
+size_t data_len;
 
-void solver_set_params(void * (* a)(), void ** (* b)(void *), int (* c)(void *)){
+void solver_set_params(void * (* a)(), void ** (* b)(void *), int (* c)(void *), size_t d){
     init = a;
     step = b;
     isEnd = c;
+    data_len = d;
 } //init return an initial board state; step return a null-terminated array of possible next boards; isEnd returns 1 if the board is a valid end state, 0 otherwise
 
 void solver_calculate(){
