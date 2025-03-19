@@ -10,5 +10,4 @@ add_executable(solver_si main.c
         lists.h
         trie.c
         trie.h
-        flt.c
-        flt.h)
+)

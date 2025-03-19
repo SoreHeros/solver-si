@@ -8,11 +8,15 @@
 #include <stdlib.h>
 
 typedef struct trie * trie;
+typedef trie trie_val;
 
 trie trie_init();
 void trie_free(trie);
 
-void trie_add(trie, void * data, size_t data_len);
-int  trie_if_exists(trie, void * data, size_t data_len);
+trie_val trie_add(trie, void * data, size_t data_len);
+trie_val trie_search(trie, void * data, size_t data_len);
+
+void trie_remove(trie, void * data, size_t data_len);
+void * trie_backtrace(trie_val, size_t * data_len);
 
 #endif //SOLVER_SI_TRIE_H
