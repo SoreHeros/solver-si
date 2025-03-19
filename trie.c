@@ -7,6 +7,7 @@
 #define PSIZE 256
 
 typedef struct trie{
+    // mutex
     struct trie * prev;
     int children;
     char exists;
@@ -50,8 +51,12 @@ void trie_free(trie t){
 }
 
 trie_val trie_add(trie t, void * data, size_t data_len){
+    // lock t
+    // if(t->prev != NULL)
+    //   unlock t->prev
     if(data_len == 0) {
         t->exists = 1;
+        // unlock t
         return t;
     }
 
@@ -62,26 +67,37 @@ trie_val trie_add(trie t, void * data, size_t data_len){
     }
 
     t->children++;
+
     return trie_add(t->pointers[pos], data+1, data_len-1);
 }
 
 trie_val trie_search(trie t, void * data, size_t data_len){
-    if(data_len == 0)
-        return t->exists ? t : NULL;
-
+    // lock t
+    // if t->prev != NULL
+    // unlock t->prev
+    if(data_len == 0) {
+        trie_val ret = t->exists ? t : NULL;;
+        // unlock t
+        return ret;
+    }
     unsigned char pos = *(unsigned char *)data;
 
     if(t->pointers[pos] == NULL){
+        // unlock t
         return NULL;
     }
-
     return trie_search(t->pointers[pos], data+1, data_len-1);
 }
 
 void trie_remove(trie t, void * data, size_t data_len){
+    //lock t
+    //if(t->prev != NULL)
+    //  unlock t-prev
+
     if(data_len == 0) {
-        if(t->prev != NULL && t->children == 0)
+        if(t->children == 0) {
             free(t);
+        }
         return;
     }
 
@@ -89,10 +105,20 @@ void trie_remove(trie t, void * data, size_t data_len){
 
     t->children--;
 
-    trie_remove(t->pointers[pos], data+1, data_len-1);
+    trie aux = t->pointers[pos];
 
+
+    //lock aux
     if(!t->children)
         free(t);
+        //aux->prev = NULL;
+    else {
+        if (aux->children == 1)
+            t->pointers[pos] = NULL;
+    }
+    //unlock aux
+
+    trie_remove(aux, data+1, data_len-1);
 }
 
 
